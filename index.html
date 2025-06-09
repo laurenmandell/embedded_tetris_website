@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="en" class="bg-gray-100 text-gray-900">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Embedded Tetris</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    [data-toggle-section]>.toggle-content {
+      max-height: 0;
+      opacity: 0;
+      overflow: hidden;
+      transition: all 0.5s ease-in-out;
+    }
+
+    [data-toggle-section][data-open="true"]>.toggle-content {
+      max-height: 10000px;
+      opacity: 1;
+    }
+
+    [data-toggle-section][data-open="false"] {
+      padding-bottom: 0 !important;
+    }
+  </style>
+</head>
+
+
+<body class="min-h-screen flex flex-col items-center px-4 py-8">
+
+  <header class="w-full max-w-3xl text-center mb-8">
+    <div class="flex flex-col items-center md:flex-row md:justify-center md:gap-6">
+      <h1 class="text-4xl md:text-5xl font-extrabold tracking-tight flex flex-wrap justify-center items-center">
+        <span class="text-black mr-4">Embedded</span>
+        <span class="flex space-x-1">
+          <span class="text-transparent bg-clip-text bg-gradient-to-br from-red-500 to-orange-400">T</span>
+          <span class="text-transparent bg-clip-text bg-gradient-to-br from-orange-400 to-yellow-300">E</span>
+          <span class="text-transparent bg-clip-text bg-gradient-to-br from-yellow-400 to-yellow-200">T</span>
+          <span class="text-transparent bg-clip-text bg-gradient-to-br from-green-500 to-green-300">R</span>
+          <span class="text-transparent bg-clip-text bg-gradient-to-br from-blue-500 to-cyan-300">I</span>
+          <span class="text-transparent bg-clip-text bg-gradient-to-br from-purple-500 to-pink-400">S</span>
+        </span>
+      </h1>
+
+      <div class="w-24">
+        <div class="tenor-gif-embed" data-postid="19278233" data-share-method="host" data-aspect-ratio="0.79375"
+          data-width="100%">
+          <a href="https://tenor.com/view/tetris-gif-19278233">Tetris GIF</a>
+        </div>
+      </div>
+      <script type="text/javascript" async src="https://tenor.com/embed.js"></script>
+    </div>
+    <p class="mt-2 text-gray-600">EEC 172 Final Project</p>
+    <p class="mt-1 text-sm text-gray-500 italic">Lauren Mandell and Nelson Young</p>
+  </header>
+
+  <section class="w-full max-w-3xl mb-12">
+    <iframe class="w-full h-64 md:h-[400px] focus:outline-none shadow-lg"
+      src="https://www.youtube.com/embed/DTlFZtvlpJ4" title="Embedded Tetris Demo" frameborder="0" allowfullscreen>
+    </iframe>
+  </section>
+
+  <section class="w-full max-w-3xl text-left space-y-4">
+    <div data-toggle-section data-open="true" class="pb-4">
+      <button class="text-2xl font-bold flex items-center justify-between w-full py-2">
+        <span>Overview</span>
+        <svg class="w-6 h-6 transition-transform duration-300 rotate-180" fill="none" stroke="currentColor"
+          viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+        </svg>
+      </button>
+      <div class="toggle-content transition-all duration-500 ease-in-out space-y-4 mt-2">
+
+        <p>We designed and implemented a fully functional and interactive
+          version of Tetris on the Texas Instruments CC3200 Wi-Fi
+          microcontroller. The final prototype is a standalone embedded system
+          that delivers a complete game experience using onboard sensors and
+          peripherals, requiring no external computer or display.</p>
+        <p>The system uses an OLED screen to render real-time gameplay, with
+          player input handled through a combination of the onboard
+          accelerometer (for movement), GPIO buttons (for hard drop and
+          rotation), and an IR remote (for menu navigation, pause/resume
+          functionality, and name entry). Gameplay includes classic Tetris
+          features, such as falling blocks, rotation with wall kicks, row
+          clearing, increasing difficulty, next-piece preview, and ghost piece
+          visualization.</p>
+        <p>Beyond the core gameplay, our prototype also integrates cloud
+          connectivity through AWS IoT. Players can save and load mid-game
+          progress, submit scores to a persistent leaderboard, and resume
+          gameplay across sessions. All cloud communication is handled via
+          HTTP GET and POST requests over TLS, using JSON to serialize and
+          restore game state.</p>
+        <p>The final product successfully brings together real-time control,
+          user interaction, visual rendering, and bidirectional web service
+          integration into a single cohesive embedded system. It demonstrates
+          robust hardware-software integration and offers a polished,
+          responsive user experience from power-on to game over.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="w-full max-w-3xl text-left space-y-4">
+    <div data-toggle-section data-open="false" class="pb-4">
+      <button class="text-2xl font-bold flex items-center justify-between w-full py-2">
+        <span>Design</span>
+        <svg class="w-6 h-6 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+        </svg>
+      </button>
+      <div class="toggle-content transition-all duration-500 ease-in-out space-y-4 mt-2">
+        <p>The design of Embedded Tetris was centered on creating a
+          responsive, modular, and user-friendly system that could manage
+          real-time gameplay while supporting state persistence and menu
+          navigation. To structure the game logic and user interface, we
+          developed a clear finite state machine (FSM) that handled
+          transitions between all major gameplay and menu states. This allowed
+          for organized flow control, extensibility, and efficient debugging.
+          Alongside the FSM, the system was architected to coordinate input
+          handling, display rendering, and cloud communication across various
+          hardware peripherals and services.</p>
+
+        <div data-toggle-section data-open="false" class="pb-4 pl-4 border-l border-gray-300">
+          <button class="text-xl font-semibold flex items-center justify-between w-full py-2">
+            <span>Functional Specification</span>
+            <svg class="w-5 h-5 transition-transform duration-300" fill="none" stroke="currentColor"
+              viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+            </svg>
+          </button>
+          <div class="toggle-content transition-all duration-500 ease-in-out space-y-4 mt-2">
+            <div class="flex justify-center">
+              <div class="w-[80%] text-center">
+                <img src="eec_172_fsm.png" alt="FSM Diagram for Embedded Tetris" class="mx-auto w-full h-auto">
+                <p class="text-sm italic text-gray-500 mt-2">Finite State Machine (FSM) for Embedded Tetris</p>
+              </div>
+            </div>
+            <p>The image above shows the finite state machine (FSM)
+              used to define high-level system behavior. The FSM controls
+              transitions between game states based on user input (via buttons and
+              IR remote), game conditions (e.g., loss detection), and cloud
+              operations (e.g., loading saved data).</p>
+            <ul class="list-disc pl-6 space-y-2">
+              <li><strong>Idle</strong>: The system powers on and waits for the user to interact with the Start Menu via
+                IR input.</li>
+              <li><strong>Start Menu</strong>: The user navigates menu options (Start Game, Load Game, Help) using the
+                IR remote. Selecting “Start Game” transitions to <code>Playing</code>, while “Load Game” goes to
+                <code>Resume/Load</code>.
+              </li>
+              <li><strong>Resume/Load</strong>: Game state is restored from AWS IoT Shadow using a GET request. Once the
+                saved data is deserialized, the system moves into the <code>Playing</code> state.</li>
+              <li><strong>Playing</strong>: This is the main gameplay loop, where block movement, input polling,
+                collision detection, and rendering occur. The accelerometer is used for the horizontal movement of
+                falling blocks, and hardware buttons handle rotation and hard drop. During gameplay, users can pause the
+                game to enter the <code>Pause Menu</code>.</li>
+              <li><strong>Pause Menu</strong>: This menu provides options to resume the game, save the current game
+                state to AWS, access the Help Menu, or exit back to the Start Menu. All interactions in this menu are
+                driven via IR remote.</li>
+              <li><strong>Help</strong>: A read-only state that displays control instructions and game mechanics. The
+                user can return to the previous menu from here.</li>
+              <li><strong>Save</strong>: Game state is serialized into JSON and uploaded to AWS IoT Shadow via a
+                TLS-secured HTTP POST request. The system returns to the Pause Menu after saving.</li>
+              <li><strong>Exit</strong>: Discards the current game state and returns the system to the Start Menu.</li>
+              <li><strong>Game Over</strong>: Triggered when a newly spawned piece overlaps an existing block. In this
+                state, game statistics are uploaded to AWS, and the leaderboard is updated if the user qualifies. The
+                user is then returned to the Start Menu.</li>
+            </ul>
+            <p>This FSM ensures that gameplay, pause handling, and data
+              persistence are managed cleanly and predictably. It enables
+              intuitive user interaction while minimizing redundant logic and
+              promoting modular development.</p>
+          </div>
+        </div>
+
+        <div data-toggle-section data-open="false" class="pb-4 pl-4 border-l border-gray-300">
+          <button class="text-xl font-semibold flex items-center justify-between w-full py-2">
+            <span>System Architecture</span>
+            <svg class="w-5 h-5 transition-transform duration-300" fill="none" stroke="currentColor"
+              viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+            </svg>
+          </button>
+          <div class="toggle-content transition-all duration-500 ease-in-out space-y-4 mt-2">
+            <div class="flex justify-center">
+              <div class="w-[80%] text-center">
+                <img src="eec_172_system_arch.png" alt="Embedded Tetris System Architecture" class="mx-auto w-full h-auto">
+                <p class="text-sm italic text-gray-500 mt-2">Embedded Tetris System Architecture</p>
+              </div>
+            </div>
+            <p>The Embedded Tetris system was designed with modularity and
+              clear separation of responsibilities across components. At its
+              core is the CC3200 microcontroller, which acts as the central
+              control unit coordinating all hardware peripherals and managing
+              gameplay logic, rendering, and network communication. The system
+              integrates real-time input devices, output displays, and a
+              cloud-based backend via industry-standard communication
+              protocols (GPIO, I2C, SPI, and Wi-Fi).</p>
+            <h3 class="italic text-lg mb-2">Component Overview</h3>
+            <ul class="list-disc pl-6 space-y-3">
+              <li>
+                <strong>CC3200 Microcontroller (MCU)</strong>: The central hub of the system. It handles:
+                <ul class="list-disc pl-6 mt-1 space-y-1">
+                  <li>Input decoding from the accelerometer and IR receiver</li>
+                  <li>Finite state machine logic for menu navigation and gameplay</li>
+                  <li>Score tracking, level progression, and game timing</li>
+                  <li>Display updates over SPI to the OLED screen</li>
+                  <li>TLS-secured GET/POST requests to AWS IoT via built-in Wi-Fi</li>
+                </ul>
+              </li>
+              <li>
+                <strong>IR Remote Control and IR Receiver (GPIO)</strong>: The user navigates menus and enters player
+                names using an IR remote.
+                The IR receiver detects pulses and transmits them to the CC3200, where custom decoding logic interprets
+                the input.
+              </li>
+              <li>
+                <strong>Accelerometer (I2C)</strong>: Provides continuous tilt data to the CC3200. This is used to
+                control the horizontal movement
+                of falling Tetris blocks in real time.
+              </li>
+              <li>
+                <strong>OLED Display (SPI)</strong>: Visual output device used to render the game grid, falling blocks,
+                next piece preview,
+                ghost piece, and menu interfaces. The display is driven using Adafruit GFX and SSD1351 libraries via SPI
+                communication.
+              </li>
+              <li>
+                <strong>AWS IoT (Wi-Fi)</strong>: A cloud backend that supports game state persistence and leaderboard
+                updates.
+                The CC3200 sends and receives JSON payloads via HTTP over TLS to publish or retrieve:
+                <ul class="list-disc pl-6 mt-1 space-y-1">
+                  <li>Final game statistics (after game over)</li>
+                  <li>In-progress save/load state (during gameplay)</li>
+                  <li>Persistent leaderboard entries</li>
+                </ul>
+              </li>
+            </ul>
+            <p>This architecture ensures reliable interaction between
+              real-time hardware inputs, fast graphical feedback, and seamless
+              cloud integration. It allows the embedded system to function
+              autonomously while supporting modern cloud features typically
+              seen in web-connected applications.</p>
+          </div>
+        </div>
+  </section>
+
+  <section class="w-full max-w-3xl text-left space-y-4">
+    <div data-toggle-section data-open="false" class="pb-4">
+      <button class="text-2xl font-bold flex items-center justify-between w-full py-2">
+        <span>Implementation</span>
+        <svg class="w-6 h-6 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+        </svg>
+      </button>
+      <div class="toggle-content transition-all duration-500 ease-in-out space-y-4 mt-2">
+        <p>The Embedded Tetris system was implemented through modular
+          development of input handling, display logic, game state management,
+          and cloud connectivity. Each major component of the system
+          architecture was developed using C in Code Composer Studio and
+          tested incrementally to ensure reliability in an embedded
+          environment. This section outlines the implementation strategies and
+          design considerations for each core subsystem.</p>
+
+        <div data-toggle-section data-open="false" class="pb-4 pl-4 border-l border-gray-300">
+          <button class="text-xl font-semibold flex items-center justify-between w-full py-2">
+            <span>Game Engine and Finite State Machine</span>
+            <svg class="w-5 h-5 transition-transform duration-300" fill="none" stroke="currentColor"
+              viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+            </svg>
+          </button>
+          <div class="toggle-content transition-all duration-500 ease-in-out space-y-4 mt-2">
+            <p>
+              The system is driven by a state machine implemented in a central loop function. An enumerated
+              <code>GameState</code> variable tracks the current screen or mode (<code>MENU_START</code>,
+              <code>GAME_RUNNING</code>, <code>MENU_PAUSE</code>, <code>MENU_HELP</code>,
+              <code>MENU_GAME_OVER</code>, etc.). Each state has its own handler function to encapsulate its behavior.
+              Transitions are triggered by input events (e.g., IR commands or button presses). For example, pressing the
+              IR
+              “pause” button during gameplay switches from <code>GAME_RUNNING</code> to <code>MENU_PAUSE</code>,
+              halting movement updates and rendering a new menu interface.
+            </p>
+          </div>
+        </div>
+
+        <div data-toggle-section data-open="false" class="pb-4 pl-4 border-l border-gray-300">
+          <button class="text-xl font-semibold flex items-center justify-between w-full py-2">
+            <span>Display Logic (OLED via SPI)</span>
+            <svg class="w-5 h-5 transition-transform duration-300" fill="none" stroke="currentColor"
+              viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+            </svg>
+          </button>
+          <div class="toggle-content transition-all duration-500 ease-in-out space-y-4 mt-2">
+            <p>The game uses an Adafruit 1.27” OLED screen, interfaced over
+              SPI. We use the Adafruit GFX and SSD1351 libraries for drawing
+              primitives (e.g., rectangles, text) and rendering game
+              components. The display is updated in real time to reflect:</p>
+            <ul class="list-disc pl-6 space-y-3">
+              <li>Current board state, including block positions</li>
+              <li>Ghost piece (rendered in gray) to indicate landing location</li>
+              <li>Next piece preview in a designated preview box</li>
+              <li>Score, level, and rows cleared</li>
+              <li>Menus and user prompts (pause, game over, help)</li>
+            </ul>
+          </div>
+        </div>
+
+        <div data-toggle-section data-open="false" class="pb-4 pl-4 border-l border-gray-300">
+          <button class="text-xl font-semibold flex items-center justify-between w-full py-2">
+            <span>Accelerometer Input (I2C)</span>
+            <svg class="w-5 h-5 transition-transform duration-300" fill="none" stroke="currentColor"
+              viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+            </svg>
+          </button>
+          <div class="toggle-content transition-all duration-500 ease-in-out space-y-4 mt-2">
+            <p>The CC3200 communicates with an onboard accelerometer using
+              I2C. We poll the X-axis tilt data using a custom
+              <code>readAccelerometer()</code> function. If the tilt exceeds a set
+              threshold, the game interprets this as a left or right movement
+              command and attempts to shift the active block. To avoid
+              accidental moves due to minor hand tremors, we implemented a
+              time delay between input polls and enforced hysteresis by
+              comparing the current reading to the previous one.
+            </p>
+          </div>
+        </div>
+
+        <div data-toggle-section data-open="false" class="pb-4 pl-4 border-l border-gray-300">
+          <button class="text-xl font-semibold flex items-center justify-between w-full py-2">
+            <span>Button Input (GPIO)</span>
+            <svg class="w-5 h-5 transition-transform duration-300" fill="none" stroke="currentColor"
+              viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+            </svg>
+          </button>
+          <div class="toggle-content transition-all duration-500 ease-in-out space-y-4 mt-2">
+            <p>Two hardware buttons were used: SW2 for hard drop and SW3 for
+              rotation. The buttons are polled in each iteration of the main
+              game loop, and debounce logic ensures they only trigger once per
+              press. The rotation logic incorporates wall kicks to reposition
+              rotated blocks that collide with the board edge or other blocks,
+              ensuring legal placement in tight areas.</p>
+          </div>
+        </div>
+
+        <div data-toggle-section data-open="false" class="pb-4 pl-4 border-l border-gray-300">
+          <button class="text-xl font-semibold flex items-center justify-between w-full py-2">
+            <span>IR Remote Input and Decoding</span>
+            <svg class="w-5 h-5 transition-transform duration-300" fill="none" stroke="currentColor"
+              viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+            </svg>
+          </button>
+          <div class="toggle-content transition-all duration-500 ease-in-out space-y-4 mt-2">
+            <p>The IR remote sends NEC-encoded commands to a receiver wired to a
+              CC3200 GPIO pin. We configured a SysTick timer interrupt to
+              timestamp falling edges of IR pulses and stored pulse widths in a
+              buffer. A decoding routine reconstructs the 32-bit command and
+              dispatches it to the appropriate menu or name-entry handler. Menu
+              navigation, pause/resume, and leaderboard name input were all
+              implemented using this mechanism.</p>
+          </div>
+        </div>
+
+        <div data-toggle-section data-open="false" class="pb-4 pl-4 border-l border-gray-300">
+          <button class="text-xl font-semibold flex items-center justify-between w-full py-2">
+            <span>Game Logic Features</span>
+            <svg class="w-5 h-5 transition-transform duration-300" fill="none" stroke="currentColor"
+              viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+            </svg>
+          </button>
+          <div class="toggle-content transition-all duration-500 ease-in-out space-y-4 mt-2">
+            <p>The following gameplay enhancements were added for visual
+              clarity and engagement, as well as to replicate the core
+              functionalities of the classic Tetris game:</p>
+            <ul class="list-disc pl-6 space-y-2">
+              <li><strong>Row Clearing</strong>: After every placement, we check for full rows, shift remaining rows
+                down, and update the board.</li>
+              <li><strong>Ghost Piece</strong>: A simulated block is dropped down until collision to show the landing
+                position.</li>
+              <li><strong>Next Piece Preview</strong>: The next Tetromino is drawn in a preview box and advanced after
+                each piece placement.</li>
+              <li><strong>Dynamic Difficulty</strong>: Game speed increases as the number of placed blocks crosses
+                certain thresholds.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div data-toggle-section data-open="false" class="pb-4 pl-4 border-l border-gray-300">
+          <button class="text-xl font-semibold flex items-center justify-between w-full py-2">
+            <span>Cloud Communication via AWS IoT (Wi-Fi)</span>
+            <svg class="w-5 h-5 transition-transform duration-300" fill="none" stroke="currentColor"
+              viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+            </svg>
+          </button>
+          <div class="toggle-content transition-all duration-500 ease-in-out space-y-4 mt-2">
+            <p>The CC3200 uses its built-in Wi-Fi module to connect to AWS IoT
+              Core. TLS-secured HTTP GET and POST requests are used to
+              interact with the device’s shadow:</p>
+            <ul class="list-disc pl-6 space-y-2">
+              <li><strong>Final Score Upload</strong>: After game over, a JSON object with the player's name and score
+                is posted to the shadow’s reported state.</li>
+              <li><strong>Leaderboard Management</strong>: A top-3 leaderboard is stored and retrieved from the shadow,
+                parsed into a local leaderboard array.</li>
+              <li><strong>Save/Load Game State</strong>: Game board, score, current piece, ghost piece, and statistics
+                are serialized to JSON for upload. On load, the data is fetched and parsed to fully rehydrate the game
+                state.</li>
+            </ul>
+            <p>HTTP communication is managed using <code>http_post()</code> and
+              <code>http_get()</code> with custom headers, JSON buffers, and AWS
+              endpoint configuration.
+            </p>
+          </div>
+        </div>
+
+        <div data-toggle-section data-open="false" class="pb-4 pl-4 border-l border-gray-300">
+          <button class="text-xl font-semibold flex items-center justify-between w-full py-2">
+            <span>Data Serialization and Game Persistence</span>
+            <svg class="w-5 h-5 transition-transform duration-300" fill="none" stroke="currentColor"
+              viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+            </svg>
+          </button>
+          <div class="toggle-content transition-all duration-500 ease-in-out space-y-4 mt-2">
+            <div class="flex justify-center">
+              <div class="w-[90%] text-center">
+                <img src="eec172_finalproject_aws_ss.png" alt="Sample AWS IoT Shadow JSON structure, including game state and leaderboard data" class="mx-auto w-full h-auto">
+                <p class="text-sm italic text-gray-500 mt-2">Sample AWS IoT Shadow JSON structure, including game state and leaderboard data</p>
+              </div>
+            </div>
+            <p>Game state is converted to and from JSON format using custom
+              parsing functions. Tetromino shapes are stored as 4x4 arrays and
+              serialized by flattening to 1D vectors. Board state is uploaded
+              as a matrix, and metadata includes score, level, and timestamp.
+             An example JSON structure captured during testing is shown above.</p>
+          </div>
+        </div>
+  </section>
+
+  <section class="w-full max-w-3xl text-left space-y-4">
+    <div data-toggle-section data-open="false" class="pb-4">
+      <button class="text-2xl font-bold flex items-center justify-between w-full py-2">
+        <span>Challenges</span>
+        <svg class="w-6 h-6 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+        </svg>
+      </button>
+      <div class="toggle-content transition-all duration-500 ease-in-out space-y-4 mt-2">
+        <p>While we did not encounter any major blockers during the
+          development process, the complexity of integrating previously
+          learned techniques into a polished, real-time embedded system posed
+          a number of subtle and persistent challenges. Most components of our
+          project were built upon frameworks and concepts introduced in
+          earlier embedded systems labs (including I2C, SPI, GPIO handling,
+          state machines, and cloud communication), so the primary difficulty
+          was not learning new tools, but orchestrating these modules into a
+          cohesive and reliable whole.</p>
+        <p>One recurring issue emerged in the early stages of gameplay
+          development: our initial implementation of piece movement and
+          row-clearing logic introduced several visual artifacts. For example,
+          moving a Tetris piece downward occasionally left behind a "trail"
+          due to an off-by-one error in the piece-erasing logic. Similarly,
+          our row-clearing function intermittently failed to clear the topmost
+          row when full, which we ultimately traced back to a subtle bug in
+          our nested loop bounds. While conceptually straightforward, these
+          issues were non-trivial to debug given the lack of conventional
+          debugging tools and the limited feedback available through the OLED
+          display.</p>
+        <p>More broadly, significant effort was devoted to iterative testing and refinement of the visual output on the
+          OLED screen. Because the entire game interface (including the board, score, level, next piece preview, ghost
+          piece, and various menus) was rendered pixel-by-pixel, we had to carefully calibrate margins, text placement,
+          and element sizing to ensure clarity and avoid visual overlap. Even small UI elements, such as the position of
+          menu items or the next piece display, required repeated adjustments to achieve a polished look and an
+          intuitive player experience.</p>
+        <p>Additional challenges included fine-tuning the finite state machine
+          transitions, ensuring consistent input handling under real-time
+          constraints, and verifying bidirectional communication with AWS IoT
+          across all game states. Even features that appeared simple in
+          concept (such as pause/resume toggling or IR-based name entry)
+          required careful coordination between input decoding, display
+          rendering, and state updates to function seamlessly.</p>
+        <p>Overall, while none of these issues were unsolvable, they highlight
+          the intricacies of embedded system integration. The most valuable
+          lessons emerged not from overcoming individual bugs, but from
+          systematically assembling and refining a complex system where
+          multiple hardware and software components interact in real time.</p>
+      </div>
+  </section>
+
+  <section class="w-full max-w-3xl text-left space-y-4">
+    <div data-toggle-section data-open="false" class="pb-4">
+      <button class="text-2xl font-bold flex items-center justify-between w-full py-2">
+        <span>Future Work</span>
+        <svg class="w-6 h-6 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+        </svg>
+      </button>
+      <div class="toggle-content transition-all duration-500 ease-in-out space-y-4 mt-2">
+        <p>Given additional time, we would focus on enhancing the overall user
+          experience through improved audio-visual feedback. This includes
+          adding background music, sound effects for in-game events (such as
+          line clears or button presses), and smoother menu animations or
+          transitions to increase visual polish and user engagement.</p>
+        <p>We also considered implementing a multiplayer mode by enabling
+          Wi-Fi communication between two CC3200 devices. This feature would
+          open the door to competitive or cooperative gameplay and
+          significantly expand the system's interactivity beyond the current
+          single-player model.</p>
+      </div>
+  </section>
+
+  <section class="w-full max-w-3xl text-left space-y-4">
+    <div data-toggle-section data-open="false" class="pb-4">
+      <button class="text-2xl font-bold flex items-center justify-between w-full py-2">
+        <span>Bill of Materials</span>
+        <svg class="w-6 h-6 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+        </svg>
+      </button>
+      <div class="toggle-content transition-all duration-500 ease-in-out space-y-4 mt-2">
+        <p>
+          All components used in this project were provided by the EEC 172 instructional lab and did not incur any
+          additional cost.
+          The complete list of hardware components is summarized in the table below.
+        </p>
+
+        <div class="flex justify-center mt-4">
+          <table class="table-auto border-collapse border border-gray-400 mt-4">
+            <thead>
+              <tr>
+                <th class="border border-gray-400 px-4 py-2 text-left">Component</th>
+                <th class="border border-gray-400 px-4 py-2 text-left">Quantity</th>
+                <th class="border border-gray-400 px-4 py-2 text-left">Cost</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="border border-gray-400 px-4 py-2">CC3200 LaunchPad</td>
+                <td class="border border-gray-400 px-4 py-2">1</td>
+                <td class="border border-gray-400 px-4 py-2">Free (Provided by lab)</td>
+              </tr>
+              <tr>
+                <td class="border border-gray-400 px-4 py-2">OLED Display</td>
+                <td class="border border-gray-400 px-4 py-2">1</td>
+                <td class="border border-gray-400 px-4 py-2">Free (Provided by lab)</td>
+              </tr>
+              <tr>
+                <td class="border border-gray-400 px-4 py-2">Accelerometer Module</td>
+                <td class="border border-gray-400 px-4 py-2">1</td>
+                <td class="border border-gray-400 px-4 py-2">Free (Provided by lab)</td>
+              </tr>
+              <tr>
+                <td class="border border-gray-400 px-4 py-2">IR Receiver Module</td>
+                <td class="border border-gray-400 px-4 py-2">1</td>
+                <td class="border border-gray-400 px-4 py-2">Free (Provided by lab)</td>
+              </tr>
+              <tr>
+                <td class="border border-gray-400 px-4 py-2">TV Remote</td>
+                <td class="border border-gray-400 px-4 py-2">1</td>
+                <td class="border border-gray-400 px-4 py-2">Free (Provided by lab)</td>
+              </tr>
+              <tr>
+                <td class="border border-gray-400 px-4 py-2">Jumper Wires and Breadboard</td>
+                <td class="border border-gray-400 px-4 py-2">1 set</td>
+                <td class="border border-gray-400 px-4 py-2">Free (Provided by lab)</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+  </section>
+
+
+
+  <!-- Scroll To Top Button -->
+  <!-- Source:
+    https://tw-elements.com/docs/standard/components/scroll-back-to-top-button/
+  -->
+  <button type="button" class="!fixed bottom-5 end-5 hidden rounded-full bg-blue-600 p-3 text-white hover:bg-blue-700"
+    id="btn-back-to-top">
+    <span class="[&>svg]:w-4">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="3" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 10.5 12 3m0 0 7.5 7.5M12 3v18" />
+      </svg>
+    </span>
+  </button>
+
+  <script>
+    document.querySelectorAll('[data-toggle-section]').forEach(section => {
+      const button = section.querySelector('button');
+      const icon = button.querySelector('svg');
+      const content = section.querySelector('.toggle-content');
+
+      const isOpen = section.getAttribute('data-open') === 'true';
+      icon.classList.toggle('rotate-180', isOpen);
+
+      button.addEventListener('click', () => {
+        const currentlyOpen = section.getAttribute('data-open') === 'true';
+        section.setAttribute('data-open', !currentlyOpen);
+        icon.classList.toggle('rotate-180', !currentlyOpen);
+      });
+    });
+
+
+    const backToTopButton = document.getElementById("btn-back-to-top");
+
+    window.addEventListener("scroll", () => {
+      if (document.body.scrollTop > 100 || document.documentElement.scrollTop > 100) {
+        backToTopButton.classList.remove("hidden");
+      } else {
+        console.log("heyyy");
+        backToTopButton.classList.add("hidden");
+      }
+    });
+
+    // Scroll to top when button is clicked
+    backToTopButton.addEventListener("click", () => {
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+      });
+    });
+  </script>
+
+</body>
+
+</html>
